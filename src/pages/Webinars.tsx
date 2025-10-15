@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { format, parseISO } from "date-fns";
 
 const Webinars = () => {
   const [currentMonth, setCurrentMonth] = useState(0);
@@ -22,57 +22,59 @@ const Webinars = () => {
     { id: 3, name: "General Webinars", color: "bg-accent-foreground" },
   ];
 
-  // Sample webinars data
-  const webinars = {
-    "October 2025": [
-      { channel: 1, title: "Cloud Security Fundamentals", date: "Oct 15, 2PM-3PM EDT", speaker: "Dr. James Smith, MIT" },
-      { channel: 2, title: "Microsoft Azure Government Solutions", date: "Oct 15, 3PM-4PM EDT", speaker: "Sarah Johnson, Microsoft" },
-      { channel: 3, title: "Digital Transformation Roadmap", date: "Oct 16, 11AM-12PM EDT", speaker: "WRITA Leadership" },
-      { channel: 1, title: "Data Analytics in Public Sector", date: "Oct 22, 2PM-3PM EDT", speaker: "Prof. Maria Garcia, Stanford" },
-      { channel: 2, title: "ServiceNow for Government", date: "Oct 23, 1PM-2PM EDT", speaker: "Tom Wilson, ServiceNow" },
-      { channel: 3, title: "Cybersecurity Best Practices", date: "Oct 29, 10AM-11AM EDT", speaker: "Security Panel" },
-    ],
-    "November 2025": [
-      { channel: 1, title: "AI & Machine Learning Basics", date: "Nov 5, 2PM-3PM EST", speaker: "Dr. Lisa Chen, Berkeley" },
-      { channel: 2, title: "AWS GovCloud Deep Dive", date: "Nov 6, 3PM-4PM EST", speaker: "Mike Roberts, AWS" },
-      { channel: 3, title: "Remote Work Infrastructure", date: "Nov 12, 11AM-12PM EST", speaker: "IT Leaders Roundtable" },
-      { channel: 1, title: "Blockchain in Government", date: "Nov 19, 2PM-3PM EST", speaker: "Prof. David Lee, Harvard" },
-      { channel: 2, title: "Salesforce Government Cloud", date: "Nov 20, 1PM-2PM EST", speaker: "Jennifer Martinez, Salesforce" },
-      { channel: 3, title: "Budget Planning for IT", date: "Nov 26, 10AM-11AM EST", speaker: "Finance Committee" },
-    ],
-    "December 2025": [
-      { channel: 1, title: "Privacy & Data Protection", date: "Dec 3, 2PM-3PM EST", speaker: "Dr. Emily White, Georgetown" },
-      { channel: 2, title: "Google Workspace for Gov", date: "Dec 4, 3PM-4PM EST", speaker: "Alex Brown, Google" },
-      { channel: 3, title: "Year in Review: IT Trends", date: "Dec 10, 11AM-12PM EST", speaker: "WRITA Team" },
-      { channel: 1, title: "Open Source Technologies", date: "Dec 17, 2PM-3PM EST", speaker: "Prof. Robert Kim, MIT" },
-    ],
-    "January 2026": [
-      { channel: 1, title: "Digital Identity Management", date: "Jan 7, 2PM-3PM EST", speaker: "Dr. Amanda Taylor, Yale" },
-      { channel: 2, title: "Oracle Cloud Infrastructure", date: "Jan 8, 3PM-4PM EST", speaker: "Chris Anderson, Oracle" },
-      { channel: 3, title: "New Year Planning Session", date: "Jan 14, 11AM-12PM EST", speaker: "Leadership Panel" },
-      { channel: 1, title: "IoT in Smart Cities", date: "Jan 21, 2PM-3PM EST", speaker: "Prof. Kevin Park, Stanford" },
-      { channel: 2, title: "VMware Government Solutions", date: "Jan 22, 1PM-2PM EST", speaker: "Susan Lee, VMware" },
-      { channel: 3, title: "Citizen Engagement Platforms", date: "Jan 28, 10AM-11AM EST", speaker: "Community Leaders" },
-    ],
-    "February 2026": [
-      { channel: 1, title: "Quantum Computing Intro", date: "Feb 4, 2PM-3PM EST", speaker: "Dr. Michael Zhang, Caltech" },
-      { channel: 2, title: "Dell Technologies for Gov", date: "Feb 5, 3PM-4PM EST", speaker: "Patricia Rodriguez, Dell" },
-      { channel: 3, title: "Conference Preview & Prep", date: "Feb 11, 11AM-12PM EST", speaker: "Conference Committee" },
-      { channel: 1, title: "5G Network Implementation", date: "Feb 18, 2PM-3PM EST", speaker: "Prof. Nancy Wilson, MIT" },
-      { channel: 2, title: "Cisco Networking Solutions", date: "Feb 19, 1PM-2PM EST", speaker: "Mark Thompson, Cisco" },
-    ],
-    "March 2026": [
-      { channel: 1, title: "Ethical AI in Government", date: "Mar 4, 2PM-3PM EST", speaker: "Dr. Rachel Green, Harvard" },
-      { channel: 2, title: "IBM Cloud Solutions", date: "Mar 5, 3PM-4PM EST", speaker: "James Carter, IBM" },
-      { channel: 3, title: "Pre-Conference Networking", date: "Mar 11, 11AM-12PM EDT", speaker: "WRITA Team" },
-      { channel: 1, title: "Disaster Recovery Planning", date: "Mar 18, 2PM-3PM EDT", speaker: "Prof. Steven Harris, Stanford" },
-      { channel: 2, title: "Red Hat Enterprise Linux", date: "Mar 19, 1PM-2PM EDT", speaker: "Laura Martinez, Red Hat" },
-      { channel: 3, title: "Final Conference Details", date: "Mar 25, 10AM-11AM EDT", speaker: "Conference Team" },
-    ],
+  // Sample webinars data with ISO dates
+  const webinars = [
+    { channel: 1, title: "Cloud Security Fundamentals", date: "2025-10-15", time: "2PM-3PM EDT", speaker: "Dr. James Smith, MIT" },
+    { channel: 2, title: "Microsoft Azure Government Solutions", date: "2025-10-15", time: "3PM-4PM EDT", speaker: "Sarah Johnson, Microsoft" },
+    { channel: 3, title: "Digital Transformation Roadmap", date: "2025-10-16", time: "11AM-12PM EDT", speaker: "WRITA Leadership" },
+    { channel: 1, title: "Data Analytics in Public Sector", date: "2025-10-22", time: "2PM-3PM EDT", speaker: "Prof. Maria Garcia, Stanford" },
+    { channel: 2, title: "ServiceNow for Government", date: "2025-10-23", time: "1PM-2PM EDT", speaker: "Tom Wilson, ServiceNow" },
+    { channel: 3, title: "Cybersecurity Best Practices", date: "2025-10-29", time: "10AM-11AM EDT", speaker: "Security Panel" },
+    
+    { channel: 1, title: "AI & Machine Learning Basics", date: "2025-11-05", time: "2PM-3PM EST", speaker: "Dr. Lisa Chen, Berkeley" },
+    { channel: 2, title: "AWS GovCloud Deep Dive", date: "2025-11-06", time: "3PM-4PM EST", speaker: "Mike Roberts, AWS" },
+    { channel: 3, title: "Remote Work Infrastructure", date: "2025-11-12", time: "11AM-12PM EST", speaker: "IT Leaders Roundtable" },
+    { channel: 1, title: "Blockchain in Government", date: "2025-11-19", time: "2PM-3PM EST", speaker: "Prof. David Lee, Harvard" },
+    { channel: 2, title: "Salesforce Government Cloud", date: "2025-11-20", time: "1PM-2PM EST", speaker: "Jennifer Martinez, Salesforce" },
+    { channel: 3, title: "Budget Planning for IT", date: "2025-11-26", time: "10AM-11AM EST", speaker: "Finance Committee" },
+    
+    { channel: 1, title: "Privacy & Data Protection", date: "2025-12-03", time: "2PM-3PM EST", speaker: "Dr. Emily White, Georgetown" },
+    { channel: 2, title: "Google Workspace for Gov", date: "2025-12-04", time: "3PM-4PM EST", speaker: "Alex Brown, Google" },
+    { channel: 3, title: "Year in Review: IT Trends", date: "2025-12-10", time: "11AM-12PM EST", speaker: "WRITA Team" },
+    { channel: 1, title: "Open Source Technologies", date: "2025-12-17", time: "2PM-3PM EST", speaker: "Prof. Robert Kim, MIT" },
+    
+    { channel: 1, title: "Digital Identity Management", date: "2026-01-07", time: "2PM-3PM EST", speaker: "Dr. Amanda Taylor, Yale" },
+    { channel: 2, title: "Oracle Cloud Infrastructure", date: "2026-01-08", time: "3PM-4PM EST", speaker: "Chris Anderson, Oracle" },
+    { channel: 3, title: "New Year Planning Session", date: "2026-01-14", time: "11AM-12PM EST", speaker: "Leadership Panel" },
+    { channel: 1, title: "IoT in Smart Cities", date: "2026-01-21", time: "2PM-3PM EST", speaker: "Prof. Kevin Park, Stanford" },
+    { channel: 2, title: "VMware Government Solutions", date: "2026-01-22", time: "1PM-2PM EST", speaker: "Susan Lee, VMware" },
+    { channel: 3, title: "Citizen Engagement Platforms", date: "2026-01-28", time: "10AM-11AM EST", speaker: "Community Leaders" },
+    
+    { channel: 1, title: "Quantum Computing Intro", date: "2026-02-04", time: "2PM-3PM EST", speaker: "Dr. Michael Zhang, Caltech" },
+    { channel: 2, title: "Dell Technologies for Gov", date: "2026-02-05", time: "3PM-4PM EST", speaker: "Patricia Rodriguez, Dell" },
+    { channel: 3, title: "Conference Preview & Prep", date: "2026-02-11", time: "11AM-12PM EST", speaker: "Conference Committee" },
+    { channel: 1, title: "5G Network Implementation", date: "2026-02-18", time: "2PM-3PM EST", speaker: "Prof. Nancy Wilson, MIT" },
+    { channel: 2, title: "Cisco Networking Solutions", date: "2026-02-19", time: "1PM-2PM EST", speaker: "Mark Thompson, Cisco" },
+    
+    { channel: 1, title: "Ethical AI in Government", date: "2026-03-04", time: "2PM-3PM EST", speaker: "Dr. Rachel Green, Harvard" },
+    { channel: 2, title: "IBM Cloud Solutions", date: "2026-03-05", time: "3PM-4PM EST", speaker: "James Carter, IBM" },
+    { channel: 3, title: "Pre-Conference Networking", date: "2026-03-11", time: "11AM-12PM EDT", speaker: "WRITA Team" },
+    { channel: 1, title: "Disaster Recovery Planning", date: "2026-03-18", time: "2PM-3PM EDT", speaker: "Prof. Steven Harris, Stanford" },
+    { channel: 2, title: "Red Hat Enterprise Linux", date: "2026-03-19", time: "1PM-2PM EDT", speaker: "Laura Martinez, Red Hat" },
+    { channel: 3, title: "Final Conference Details", date: "2026-03-25", time: "10AM-11AM EDT", speaker: "Conference Team" },
+  ];
+
+  // Get unique dates and sort them
+  const allDates = [...new Set(webinars.map(w => w.date))].sort();
+  const startIdx = currentMonth * 10;
+  const visibleDates = allDates.slice(startIdx, startIdx + 10);
+
+  const getWebinarForChannelAndDate = (channelId: number, date: string) => {
+    return webinars.find(w => w.channel === channelId && w.date === date);
   };
 
-  const currentMonthName = months[currentMonth];
-  const currentWebinars = webinars[currentMonthName] || [];
+  const canGoBack = currentMonth > 0;
+  const canGoForward = startIdx + 10 < allDates.length;
 
   return (
     <div className="min-h-screen bg-background">
@@ -86,92 +88,109 @@ const Webinars = () => {
         </div>
       </section>
 
-      {/* Channel Guide */}
+      {/* Calendar Grid */}
       <section className="container mx-auto px-4 py-8">
-        {/* Month Navigation */}
-        <div className="flex items-center justify-between mb-8">
+        {/* Navigation */}
+        <div className="flex items-center justify-between mb-6">
           <Button
             variant="outline"
             size="icon"
             onClick={() => setCurrentMonth(Math.max(0, currentMonth - 1))}
-            disabled={currentMonth === 0}
+            disabled={!canGoBack}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-2xl font-bold">{currentMonthName}</h2>
+          <h2 className="text-xl font-bold">Webinar Calendar</h2>
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setCurrentMonth(Math.min(months.length - 1, currentMonth + 1))}
-            disabled={currentMonth === months.length - 1}
+            onClick={() => setCurrentMonth(currentMonth + 1)}
+            disabled={!canGoForward}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Channel Indicators */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {channels.map((channel) => (
-            <div key={channel.id} className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded ${channel.color}`}></div>
-              <span className="font-medium text-sm">{channel.name}</span>
+        {/* Calendar Grid - TV Guide Style */}
+        <div className="overflow-x-auto">
+          <div className="min-w-[900px]">
+            {/* Header Row - Channels */}
+            <div className="grid grid-cols-4 gap-2 mb-2">
+              <div className="font-semibold text-sm text-muted-foreground uppercase p-3">
+                Date
+              </div>
+              {channels.map((channel) => (
+                <div
+                  key={channel.id}
+                  className="font-semibold text-sm uppercase p-3 rounded-t-lg"
+                  style={{
+                    backgroundColor: `hsl(var(--${channel.color.replace('bg-', '')}))`,
+                    color: 'hsl(var(--primary-foreground))',
+                  }}
+                >
+                  {channel.name}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Webinar Grid */}
-        <div className="space-y-3">
-          {channels.map((channel) => (
-            <div key={channel.id}>
-              <h3 className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
-                {channel.name}
-              </h3>
-              <div className="grid gap-3 mb-6">
-                {currentWebinars
-                  .filter((w) => w.channel === channel.id)
-                  .map((webinar, idx) => (
-                    <Card
-                      key={idx}
-                      className={`border-l-4 hover:shadow-md transition-all cursor-pointer`}
-                      style={{ borderLeftColor: channel.color.replace('bg-', 'hsl(var(--') + '))' }}
-                    >
-                      <div className="p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <h4 className="font-semibold mb-1 text-foreground hover:text-primary transition-colors">
+            {/* Calendar Rows */}
+            <div className="space-y-2">
+              {visibleDates.map((date) => (
+                <div key={date} className="grid grid-cols-4 gap-2">
+                  {/* Date Column */}
+                  <div className="bg-muted p-3 rounded-lg flex flex-col justify-center">
+                    <div className="font-semibold">{format(parseISO(date), 'MMM d')}</div>
+                    <div className="text-xs text-muted-foreground">{format(parseISO(date), 'EEEE')}</div>
+                  </div>
+
+                  {/* Channel Columns */}
+                  {channels.map((channel) => {
+                    const webinar = getWebinarForChannelAndDate(channel.id, date);
+                    return (
+                      <Card
+                        key={channel.id}
+                        className={`p-3 ${webinar ? 'hover:shadow-md cursor-pointer' : 'bg-muted/30'} transition-all`}
+                      >
+                        {webinar ? (
+                          <div>
+                            <h4 className="font-semibold text-sm mb-1 line-clamp-2">
                               {webinar.title}
                             </h4>
-                            <p className="text-sm text-muted-foreground mb-2">
+                            <p className="text-xs text-muted-foreground mb-1 line-clamp-1">
                               {webinar.speaker}
                             </p>
-                            <div className="flex items-center gap-2 text-xs">
-                              <Clock className="h-3 w-3" />
-                              <span className="text-muted-foreground">{webinar.date}</span>
-                            </div>
+                            <p className="text-xs font-medium text-primary">
+                              {webinar.time}
+                            </p>
                           </div>
-                          <Badge variant="outline" className="shrink-0">
-                            Register
-                          </Badge>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-              </div>
+                        ) : (
+                          <div className="text-xs text-muted-foreground text-center py-4">
+                            No webinar
+                          </div>
+                        )}
+                      </Card>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* Month Navigation Dots */}
-        <div className="flex justify-center gap-2 mt-8">
-          {months.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentMonth(idx)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                idx === currentMonth ? "bg-primary w-8" : "bg-muted hover:bg-muted-foreground/50"
-              }`}
-            />
-          ))}
+        {/* Legend */}
+        <div className="mt-8 pt-6 border-t">
+          <h3 className="text-sm font-semibold mb-3">Channels</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {channels.map((channel) => (
+              <div key={channel.id} className="flex items-center gap-3">
+                <div
+                  className="w-4 h-4 rounded"
+                  style={{ backgroundColor: `hsl(var(--${channel.color.replace('bg-', '')}))` }}
+                ></div>
+                <span className="font-medium text-sm">{channel.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
