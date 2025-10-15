@@ -40,7 +40,8 @@ const Layout = ({ children }: LayoutProps) => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
               <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <span className="text-xl font-bold text-primary-foreground">W</span>
+                <span className=" ">
+                  <img src='https://storage.googleapis.com/gpt-engineer-file-uploads/F87o9zbwMwZM962Bbomv6GeiEvF3/uploads/1760483022276-cropped-writa_logo.png'></img></span>
               </div>
               <span className="font-bold text-xl text-foreground hidden sm:inline">WRITA</span>
             </Link>

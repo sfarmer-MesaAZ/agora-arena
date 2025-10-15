@@ -149,7 +149,7 @@ const Webinars = () => {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-xl font-bold">Webinar Calendar</h2>
+          <h2 className="text-xl font-bold">Webinar Channel Guide</h2>
           <Button
             variant="outline"
             size="icon"
@@ -288,7 +288,7 @@ const Webinars = () => {
 
                 {isRegistered(selectedWebinar) ? (
                   <div className="space-y-3 pt-4 border-t">
-                    <div className="flex items-center gap-2 text-green-600">
+                    <div className="flex items-center gap-2 text-green-300">
                       <Check className="h-5 w-5" />
                       <span className="font-semibold">You're registered for this webinar!</span>
                     </div>
