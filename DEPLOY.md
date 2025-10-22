@@ -41,3 +41,20 @@ Option C — Serve from `docs/` folder
 Troubleshooting
 - If assets 404, ensure `base` is set correctly (e.g., `/OWNER/REPO/`) in `vite.config.ts` or via `VITE_BASE` env var.
 - For SPA routing, enable `404` fallback to `index.html` in GitHub Pages or use HashRouter in React.
+
+Fallback: Use a Personal Access Token (PAT)
+1. If the workflow fails with a 403 when pushing ("Permission denied to github-actions[bot]"), your org or repo may block the default `GITHUB_TOKEN` from pushing.
+2. Create a PAT on GitHub: Settings -> Developer settings -> Personal access tokens -> Tokens (classic) -> Generate new token. Grant `repo` scope (for private repos) or `public_repo` for public repos.
+3. Add the token to your repo secrets: `Settings -> Secrets -> Actions -> New repository secret`, name it `GH_PAGES_PAT`.
+4. Update the workflow `gh-pages.yml` deploy step to use the `personal_token` input instead of `github_token`:
+
+```yaml
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.GH_PAGES_PAT }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+```
+
+5. Commit and push. The workflow will use your PAT to create/update the `gh-pages` branch.

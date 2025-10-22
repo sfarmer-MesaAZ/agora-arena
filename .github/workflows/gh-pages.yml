@@ -5,12 +5,21 @@ on:
     branches:
       - main
 
+# Grant the minimum required permissions so the action can push to gh-pages and manage pages
+permissions:
+  contents: write
+  pages: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # persist-credentials ensures the GITHUB_TOKEN is available for git push
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,6 +38,9 @@ jobs:
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
+          # The workflow-level permissions (contents: write, pages: write) enable GITHUB_TOKEN to push.
+          # If your repository or org blocks GITHUB_TOKEN write access, create a PAT with `repo` scope
+          # and add it to repo Secrets as `GH_PAGES_PAT`, then replace `github_token` with `personal_token`.
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
