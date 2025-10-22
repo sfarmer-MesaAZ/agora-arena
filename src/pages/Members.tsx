@@ -191,7 +191,7 @@ const Members = () => {
             <CardDescription>Click on a city marker to view members in that location</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="w-full h-[500px] bg-muted/20 rounded-lg overflow-hidden">
+            <div className="w-[400] h-[800px] bg-muted/20 rounded-lg overflow-hidden">
               <ComposableMap projection="geoAlbersUsa">
                 <Geographies geography={geoUrl}>
                   {({ geographies }) =>
