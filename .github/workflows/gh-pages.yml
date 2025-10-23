@@ -33,7 +33,7 @@ jobs:
         env:
           # Use just the repo name so base becomes '/repo-name/' which is correct for project pages
           VITE_BASE: "/${{ github.event.repository.name }}/"
-        run: npm run build
+        run: npm run build:static
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
