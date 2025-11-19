@@ -35,14 +35,11 @@ jobs:
           VITE_BASE: "/${{ github.event.repository.name }}/"
         run: npm run build:static
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload static site artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          # The workflow-level permissions (contents: write, pages: write) enable GITHUB_TOKEN to push.
-          # If your repository or org blocks GITHUB_TOKEN write access, create a PAT with `repo` scope
-          # and add it to repo Secrets as `GH_PAGES_PAT`, then replace `github_token` with `personal_token`.
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          path: ./dist
+
+      - name: Deploy to GitHub Pages (official)
+        uses: actions/deploy-pages@v1
+        # This action reads the artifact uploaded by the previous step and publishes it to Pages
